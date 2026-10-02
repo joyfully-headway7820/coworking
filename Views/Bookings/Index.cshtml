@@ -1,0 +1,107 @@
+@model BookingIndexViewModel
+@{
+    ViewData["Title"] = "Бронирования";
+    var query = Model.Query;
+}
+
+<h1>Бронирования</h1>
+<p><a asp-action="Create">Новое бронирование</a></p>
+
+<form class="filters" method="get" asp-action="Index">
+    <label>
+        <span>Статус</span>
+        <select name="status">
+            <option value="">Все</option>
+            @foreach (var status in Model.Statuses)
+            {
+                if (status.Value == query.Status)
+                {
+                    <option value="@status.Value" selected>@status.Text</option>
+                }
+                else
+                {
+                    <option value="@status.Value">@status.Text</option>
+                }
+            }
+        </select>
+    </label>
+    <label>
+        <span>Помещение</span>
+        <select name="roomId">
+            <option value="">Все</option>
+            @foreach (var room in Model.Rooms)
+            {
+                if (room.Value == query.RoomId?.ToString())
+                {
+                    <option value="@room.Value" selected>@room.Text</option>
+                }
+                else
+                {
+                    <option value="@room.Value">@room.Text</option>
+                }
+            }
+        </select>
+    </label>
+    <label>
+        <span>Клиент</span>
+        <select name="clientId">
+            <option value="">Все</option>
+            @foreach (var client in Model.Clients)
+            {
+                if (client.Value == query.ClientId?.ToString())
+                {
+                    <option value="@client.Value" selected>@client.Text</option>
+                }
+                else
+                {
+                    <option value="@client.Value">@client.Text</option>
+                }
+            }
+        </select>
+    </label>
+    <label>
+        <span>Дата</span>
+        <input name="date" type="date" value="@query.Date?.ToString("yyyy-MM-dd")" />
+    </label>
+    <button type="submit">Фильтровать</button>
+</form>
+
+@if (Model.Bookings.Count == 0)
+{
+    <p>Ничего не найдено.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Клиент</th>
+                <th>Помещение</th>
+                <th>Начало</th>
+                <th>Окончание</th>
+                <th>Статус</th>
+                <th>Длительность</th>
+                <th>Базовая стоимость</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var booking in Model.Bookings)
+            {
+                <tr>
+                    <td><a asp-route="client-bookings" asp-route-id="@booking.ClientId">@booking.ClientName</a></td>
+                    <td><a asp-route="room-details" asp-route-id="@booking.RoomId">@booking.RoomName</a></td>
+                    <td>@AppDate.Format(booking.StartTime)</td>
+                    <td>@AppDate.Format(booking.EndTime)</td>
+                    <td>@BookingStatuses.Title(booking.Status)</td>
+                    <td>@AppDate.Hours(booking.Hours)</td>
+                    <td>@Money.Format(booking.RoomCost)</td>
+                    <td class="actions">
+                        <a asp-action="Details" asp-route-id="@booking.Id">Подробнее</a>
+                        <a asp-action="Edit" asp-route-id="@booking.Id">Изменить</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

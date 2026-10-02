@@ -1,0 +1,47 @@
+@model BookingFormViewModel
+<div asp-validation-summary="ModelOnly" class="flash-error"></div>
+<label>
+    <span>Клиент</span>
+    <select asp-for="ClientId" asp-items="Model.Clients">
+        <option value="">Выберите клиента</option>
+    </select>
+    <span asp-validation-for="ClientId" class="field-error"></span>
+</label>
+<label>
+    <span>Помещение</span>
+    <select asp-for="RoomId" asp-items="Model.Rooms">
+        <option value="">Выберите помещение</option>
+    </select>
+    <span asp-validation-for="RoomId" class="field-error"></span>
+</label>
+<label>
+    <span>Начало</span>
+    <input asp-for="StartTime" asp-format="{0:yyyy-MM-ddTHH:mm}" type="datetime-local" />
+    <span asp-validation-for="StartTime" class="field-error"></span>
+</label>
+<label>
+    <span>Окончание</span>
+    <input asp-for="EndTime" asp-format="{0:yyyy-MM-ddTHH:mm}" type="datetime-local" />
+    <span asp-validation-for="EndTime" class="field-error"></span>
+</label>
+
+<fieldset>
+    <legend>Дополнительные услуги</legend>
+    @for (var i = 0; i < Model.Services.Count; i++)
+    {
+        <div class="line">
+            <input type="hidden" asp-for="Services[i].ServiceId" />
+            <input type="hidden" asp-for="Services[i].Name" />
+            <input type="hidden" asp-for="Services[i].Price" />
+            <label class="check">
+                <input asp-for="Services[i].Selected" />
+                <span>@Model.Services[i].Name — @Money.Format(Model.Services[i].Price)</span>
+            </label>
+            <label>
+                <span>Количество</span>
+                <input asp-for="Services[i].Quantity" type="number" min="1" />
+            </label>
+        </div>
+    }
+</fieldset>
+<button type="submit">Сохранить</button>

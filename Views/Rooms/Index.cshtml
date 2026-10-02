@@ -1,0 +1,85 @@
+@model RoomIndexViewModel
+@{
+    ViewData["Title"] = "Помещения";
+    var query = Model.Query;
+}
+
+<h1>Помещения</h1>
+<p><a asp-action="Create">Новое помещение</a></p>
+
+<form class="filters" method="get" asp-route="catalog-rooms">
+    <label>
+        <span>Тип</span>
+        <select name="roomType">
+            <option value="">Все</option>
+            @foreach (var type in Model.RoomTypes)
+            {
+                if (type.Value == query.RoomType)
+                {
+                    <option value="@type.Value" selected>@type.Text</option>
+                }
+                else
+                {
+                    <option value="@type.Value">@type.Text</option>
+                }
+            }
+        </select>
+    </label>
+    <label>
+        <span>Вместимость от</span>
+        <input name="minCapacity" type="number" min="1" value="@query.MinCapacity" />
+    </label>
+    <label>
+        <span>Цена за час до</span>
+        <input name="maxPrice" type="number" min="0" step="0.01" value="@query.MaxPrice?.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
+    </label>
+    <label class="check">
+        @if (query.ActiveOnly)
+        {
+            <input type="checkbox" name="activeOnly" value="true" checked />
+        }
+        else
+        {
+            <input type="checkbox" name="activeOnly" value="true" />
+        }
+        <span>Только активные</span>
+    </label>
+    <button type="submit">Фильтровать</button>
+</form>
+
+@if (Model.Rooms.Count == 0)
+{
+    <p>Ничего не найдено.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Тип</th>
+                <th>Вместимость</th>
+                <th>Цена за час</th>
+                <th>Активно</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var room in Model.Rooms)
+            {
+                <tr>
+                    <td>@room.Name</td>
+                    <td>@room.RoomType</td>
+                    <td>@room.Capacity</td>
+                    <td>@Money.Format(room.HourlyRate)</td>
+                    <td>@(room.IsActive ? "Да" : "Нет")</td>
+                    <td class="actions">
+                        <a asp-route="room-details" asp-route-id="@room.Id">Подробнее</a>
+                        <a asp-action="Edit" asp-route-id="@room.Id">Изменить</a>
+                        <a asp-action="Delete" asp-route-id="@room.Id">Удалить</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

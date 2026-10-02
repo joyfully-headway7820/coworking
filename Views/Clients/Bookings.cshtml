@@ -1,0 +1,11 @@
+@model ClientDetailsViewModel
+@{
+    ViewData["Title"] = "Бронирования клиента";
+}
+
+<h1>Бронирования: @Model.FullName</h1>
+<p class="actions">
+    <a asp-action="Details" asp-route-id="@Model.Id">Карточка клиента</a>
+    <a asp-action="Index">К списку</a>
+</p>
+<partial name="_BookingLinks" model="Model.Bookings" />

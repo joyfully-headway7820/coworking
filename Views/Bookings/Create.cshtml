@@ -1,0 +1,27 @@
+@model BookingFormViewModel
+@{
+    ViewData["Title"] = "Новое бронирование";
+}
+
+<h1>Новое бронирование</h1>
+<p>Статус при создании: @BookingStatuses.Title(BookingStatuses.New).</p>
+
+<form method="post" asp-action="Create" id="booking-form">
+    <partial name="_BookingForm" model="Model" />
+</form>
+
+<section class="panel" id="availability">
+    <h2>Проверка доступности</h2>
+    <label>
+        <span>Нужная вместимость</span>
+        <input id="needed-capacity" type="number" min="1" value="1" />
+    </label>
+    <button type="button" id="check-availability">Проверить доступность</button>
+    <div id="availability-result"></div>
+</section>
+
+<p><a asp-action="Index">Отмена</a></p>
+
+@section Scripts {
+    <script src="~/js/booking-availability.js" asp-append-version="true"></script>
+}

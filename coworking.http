@@ -1,0 +1,89 @@
+@coworking_HostAddress = http://localhost:5295
+
+### 200 OK — список помещений
+GET {{coworking_HostAddress}}/api/rooms
+Accept: application/json
+
+### 200 OK — помещение по id
+GET {{coworking_HostAddress}}/api/rooms/1
+Accept: application/json
+
+### 200 OK — свободные помещения
+GET {{coworking_HostAddress}}/api/rooms/available?start=2027-03-01T10:00:00&end=2027-03-01T12:00:00&capacity=4
+Accept: application/json
+
+### 200 OK — список бронирований
+GET {{coworking_HostAddress}}/api/bookings
+Accept: application/json
+
+### 400 Bad Request — нет параметров доступности
+GET {{coworking_HostAddress}}/api/rooms/available
+Accept: application/json
+
+### 404 Not Found — нет помещения
+GET {{coworking_HostAddress}}/api/rooms/99999
+Accept: application/json
+
+### 404 Not Found — нет клиента
+POST {{coworking_HostAddress}}/api/bookings
+Content-Type: application/json
+Accept: application/json
+
+{
+  "clientId": 99999,
+  "roomId": 1,
+  "startTime": "2027-04-01T10:00:00",
+  "endTime": "2027-04-01T12:00:00"
+}
+
+### 409 Conflict — помещение уже занято (сегодня 10:00–12:00, Переговорная Альфа)
+POST {{coworking_HostAddress}}/api/bookings
+Content-Type: application/json
+Accept: application/json
+
+{
+  "clientId": 2,
+  "roomId": 1,
+  "startTime": "2026-09-30T10:00:00",
+  "endTime": "2026-09-30T12:00:00"
+}
+
+### 201 Created — новое бронирование
+# @name createBooking
+POST {{coworking_HostAddress}}/api/bookings
+Content-Type: application/json
+Accept: application/json
+
+{
+  "clientId": 2,
+  "roomId": 1,
+  "startTime": "2027-05-10T10:00:00",
+  "endTime": "2027-05-10T13:00:00",
+  "services": [
+    { "serviceId": 1, "quantity": 2 }
+  ]
+}
+
+### 200 OK — смена статуса
+PUT {{coworking_HostAddress}}/api/bookings/{{createBooking.response.body.$.id}}/status
+Content-Type: application/json
+Accept: application/json
+
+{
+  "status": "Confirmed"
+}
+
+### 409 Conflict — запрещённый переход статуса
+PUT {{coworking_HostAddress}}/api/bookings/{{createBooking.response.body.$.id}}/status
+Content-Type: application/json
+Accept: application/json
+
+{
+  "status": "New"
+}
+
+### 204 No Content — удаление
+DELETE {{coworking_HostAddress}}/api/bookings/{{createBooking.response.body.$.id}}
+
+### 404 Not Found — повторное удаление
+DELETE {{coworking_HostAddress}}/api/bookings/{{createBooking.response.body.$.id}}

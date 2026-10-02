@@ -1,0 +1,23 @@
+@model ClientFormViewModel
+<div asp-validation-summary="ModelOnly" class="flash-error"></div>
+<label>
+    <span>ФИО</span>
+    <input asp-for="FullName" />
+    <span asp-validation-for="FullName" class="field-error"></span>
+</label>
+<label>
+    <span>Электронная почта</span>
+    <input asp-for="Email" type="email" />
+    <span asp-validation-for="Email" class="field-error"></span>
+</label>
+<label>
+    <span>Телефон</span>
+    <input asp-for="Phone" />
+    <span asp-validation-for="Phone" class="field-error"></span>
+</label>
+<label>
+    <span>Организация</span>
+    <input asp-for="Company" />
+    <span asp-validation-for="Company" class="field-error"></span>
+</label>
+<button type="submit">Сохранить</button>

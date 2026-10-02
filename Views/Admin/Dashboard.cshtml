@@ -1,0 +1,42 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Админ-панель";
+}
+
+<h1>Админ-панель</h1>
+<section class="stats">
+    <p><span>Помещений</span><strong>@Model.RoomCount</strong></p>
+    <p><span>Активных помещений</span><strong>@Model.ActiveRoomCount</strong></p>
+    <p><span>Клиентов</span><strong>@Model.ClientCount</strong></p>
+    <p><span>Бронирований сегодня</span><strong>@Model.TodayBookingCount</strong></p>
+    <p><span>Со статусом «Новое»</span><strong>@Model.NewBookingCount</strong></p>
+    <p><span>Сумма завершённых</span><strong>@Money.Format(Model.CompletedTotal)</strong></p>
+</section>
+
+<form id="booking-filter" class="filters" method="get" asp-action="Dashboard">
+    <label>
+        <span>Статус бронирования</span>
+        <select name="status">
+            @foreach (var status in Model.Statuses)
+            {
+                if (status.Selected)
+                {
+                    <option value="@status.Value" selected>@status.Text</option>
+                }
+                else
+                {
+                    <option value="@status.Value">@status.Text</option>
+                }
+            }
+        </select>
+    </label>
+    <button type="submit">Применить</button>
+</form>
+
+<div id="bookings-panel" class="panel">
+    <partial name="_Bookings" model="Model.Bookings" />
+</div>
+
+@section Scripts {
+    <script src="~/js/admin-filter.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,35 @@
+@model IReadOnlyList<DashboardBookingRowViewModel>
+@if (Model.Count == 0)
+{
+    <p>Бронирований нет.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Клиент</th>
+                <th>Помещение</th>
+                <th>Начало</th>
+                <th>Окончание</th>
+                <th>Статус</th>
+                <th>Итого</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var booking in Model)
+            {
+                <tr>
+                    <td>@booking.ClientName</td>
+                    <td>@booking.RoomName</td>
+                    <td>@AppDate.Format(booking.StartTime)</td>
+                    <td>@AppDate.Format(booking.EndTime)</td>
+                    <td>@BookingStatuses.Title(booking.Status)</td>
+                    <td>@Money.Format(booking.Total)</td>
+                    <td><a asp-controller="Bookings" asp-action="Details" asp-route-id="@booking.Id">Открыть</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -1,0 +1,11 @@
+@model BookingFormViewModel
+@{
+    ViewData["Title"] = "Изменение бронирования";
+}
+
+<h1>Изменение бронирования</h1>
+<form method="post" asp-action="Edit" asp-route-id="@Model.Id">
+    <input type="hidden" asp-for="Id" />
+    <partial name="_BookingForm" model="Model" />
+</form>
+<p><a asp-action="Details" asp-route-id="@Model.Id">Отмена</a></p>

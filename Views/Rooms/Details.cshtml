@@ -1,0 +1,24 @@
+@model RoomDetailsViewModel
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<h1>@Model.Name</h1>
+<dl>
+    <dt>Тип</dt>
+    <dd>@Model.RoomType</dd>
+    <dt>Вместимость</dt>
+    <dd>@Model.Capacity</dd>
+    <dt>Цена за час</dt>
+    <dd>@Money.Format(Model.HourlyRate)</dd>
+    <dt>Активно</dt>
+    <dd>@(Model.IsActive ? "Да" : "Нет")</dd>
+</dl>
+<p class="actions">
+    <a asp-action="Edit" asp-route-id="@Model.Id">Изменить</a>
+    <a asp-action="Delete" asp-route-id="@Model.Id">Удалить</a>
+    <a asp-route="catalog-rooms">К списку</a>
+</p>
+
+<h2>Бронирования</h2>
+<partial name="_BookingLinks" model="Model.Bookings" />

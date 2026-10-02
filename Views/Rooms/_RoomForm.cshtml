@@ -1,0 +1,27 @@
+@model RoomFormViewModel
+<div asp-validation-summary="ModelOnly" class="flash-error"></div>
+<label>
+    <span>Название</span>
+    <input asp-for="Name" />
+    <span asp-validation-for="Name" class="field-error"></span>
+</label>
+<label>
+    <span>Тип</span>
+    <input asp-for="RoomType" />
+    <span asp-validation-for="RoomType" class="field-error"></span>
+</label>
+<label>
+    <span>Вместимость</span>
+    <input asp-for="Capacity" type="number" min="1" />
+    <span asp-validation-for="Capacity" class="field-error"></span>
+</label>
+<label>
+    <span>Цена за час</span>
+    <input asp-for="HourlyRate" type="number" min="0" step="0.01" />
+    <span asp-validation-for="HourlyRate" class="field-error"></span>
+</label>
+<label class="check">
+    <input asp-for="IsActive" />
+    <span>Доступно для бронирования</span>
+</label>
+<button type="submit">Сохранить</button>

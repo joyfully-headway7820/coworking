@@ -1,0 +1,10 @@
+@model ClientFormViewModel
+@{
+    ViewData["Title"] = "Новый клиент";
+}
+
+<h1>Новый клиент</h1>
+<form method="post" asp-action="Create">
+    <partial name="_ClientForm" model="Model" />
+</form>
+<p><a asp-action="Index">Отмена</a></p>

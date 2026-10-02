@@ -1,0 +1,10 @@
+@model RoomFormViewModel
+@{
+    ViewData["Title"] = "Новое помещение";
+}
+
+<h1>Новое помещение</h1>
+<form method="post" asp-action="Create">
+    <partial name="_RoomForm" model="Model" />
+</form>
+<p><a asp-route="catalog-rooms">Отмена</a></p>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] — Коворкинг</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    @{
+        var current = ViewContext.RouteData.Values["controller"]?.ToString();
+    }
+    <header>
+        <a class="brand" asp-route="catalog-rooms">Коворкинг</a>
+        <nav>
+            <a class="@(current == "Rooms" ? "is-active" : null)" asp-route="catalog-rooms">Помещения</a>
+            <a class="@(current == "Clients" ? "is-active" : null)" asp-controller="Clients" asp-action="Index">Клиенты</a>
+            <a class="@(current == "Bookings" ? "is-active" : null)" asp-controller="Bookings" asp-action="Index">Бронирования</a>
+            <a class="@(current == "Admin" ? "is-active" : null)" asp-controller="Admin" asp-action="Dashboard">Админ-панель</a>
+        </nav>
+    </header>
+    <main>
+        @if (TempData["Message"] is string message)
+        {
+            <p class="flash">@message</p>
+        }
+        @if (TempData["Error"] is string error)
+        {
+            <p class="flash flash-error">@error</p>
+        }
+        @RenderBody()
+    </main>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

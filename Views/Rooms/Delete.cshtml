@@ -1,0 +1,19 @@
+@model RoomDeleteViewModel
+@{
+    ViewData["Title"] = "Удаление помещения";
+}
+
+<h1>Удаление помещения</h1>
+@if (Model.BookingCount > 0)
+{
+    <p class="flash-error">Нельзя удалить «@Model.Name»: связанных бронирований — @Model.BookingCount.</p>
+    <p><a asp-route="room-details" asp-route-id="@Model.Id">Назад</a></p>
+}
+else
+{
+    <p>Удалить «@Model.Name»?</p>
+    <form method="post" asp-action="Delete" asp-route-id="@Model.Id">
+        <button type="submit">Удалить</button>
+        <a asp-route="room-details" asp-route-id="@Model.Id">Отмена</a>
+    </form>
+}

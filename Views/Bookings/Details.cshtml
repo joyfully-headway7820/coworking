@@ -1,0 +1,106 @@
+@model BookingDetailsViewModel
+@{
+    ViewData["Title"] = "Бронирование";
+}
+
+<h1>Бронирование №@Model.Id</h1>
+<dl>
+    <dt>Статус</dt>
+    <dd>@BookingStatuses.Title(Model.Status)</dd>
+    <dt>Начало</dt>
+    <dd>@AppDate.Format(Model.StartTime)</dd>
+    <dt>Окончание</dt>
+    <dd>@AppDate.Format(Model.EndTime)</dd>
+    <dt>Длительность</dt>
+    <dd>@AppDate.Hours(Model.Hours)</dd>
+    <dt>Создано</dt>
+    <dd>@AppDate.Format(Model.CreatedAt)</dd>
+</dl>
+
+<h2>Помещение</h2>
+<dl>
+    <dt>Название</dt>
+    <dd><a asp-route="room-details" asp-route-id="@Model.RoomId">@Model.RoomName</a></dd>
+    <dt>Тип</dt>
+    <dd>@Model.RoomType</dd>
+    <dt>Вместимость</dt>
+    <dd>@Model.Capacity</dd>
+    <dt>Цена за час</dt>
+    <dd>@Money.Format(Model.HourlyRate)</dd>
+    <dt>Активно</dt>
+    <dd>@(Model.RoomIsActive ? "Да" : "Нет")</dd>
+</dl>
+
+<h2>Клиент</h2>
+<dl>
+    <dt>ФИО</dt>
+    <dd><a asp-controller="Clients" asp-action="Details" asp-route-id="@Model.ClientId">@Model.ClientName</a></dd>
+    <dt>Почта</dt>
+    <dd>@Model.Email</dd>
+    <dt>Телефон</dt>
+    <dd>@Model.Phone</dd>
+    <dt>Организация</dt>
+    <dd>@(Model.Company ?? "—")</dd>
+</dl>
+<p><a asp-route="client-bookings" asp-route-id="@Model.ClientId">Все бронирования клиента</a></p>
+
+<h2>Дополнительные услуги</h2>
+@if (Model.Services.Count == 0)
+{
+    <p>Услуги не подключены.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Услуга</th>
+                <th>Цена</th>
+                <th>Количество</th>
+                <th>Сумма</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var line in Model.Services)
+            {
+                <tr>
+                    <td>@line.Name</td>
+                    <td>@Money.Format(line.Price)</td>
+                    <td>@line.Quantity</td>
+                    <td>@Money.Format(line.LineTotal)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<h2>Стоимость</h2>
+<dl>
+    <dt>Помещение</dt>
+    <dd>@Money.Format(Model.RoomCost)</dd>
+    <dt>Услуги</dt>
+    <dd>@Money.Format(Model.ServicesCost)</dd>
+    <dt>Итого</dt>
+    <dd>@Money.Format(Model.Total)</dd>
+</dl>
+
+@if (Model.NextStatuses.Count > 0)
+{
+    <form method="post" asp-action="ChangeStatus" asp-route-id="@Model.Id" class="filters">
+        <label>
+            <span>Новый статус</span>
+            <select name="status">
+                @foreach (var status in Model.NextStatuses)
+                {
+                    <option value="@status">@BookingStatuses.Title(status)</option>
+                }
+            </select>
+        </label>
+        <button type="submit">Сменить статус</button>
+    </form>
+}
+
+<p class="actions">
+    <a asp-action="Edit" asp-route-id="@Model.Id">Изменить</a>
+    <a asp-action="Index">К списку</a>
+</p>

@@ -1,0 +1,11 @@
+@model ClientFormViewModel
+@{
+    ViewData["Title"] = "Изменение клиента";
+}
+
+<h1>Изменение клиента</h1>
+<form method="post" asp-action="Edit" asp-route-id="@Model.Id">
+    <input type="hidden" asp-for="Id" />
+    <partial name="_ClientForm" model="Model" />
+</form>
+<p><a asp-action="Details" asp-route-id="@Model.Id">Отмена</a></p>
